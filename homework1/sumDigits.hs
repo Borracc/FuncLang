@@ -1,6 +1,9 @@
 --sumDigits.hs--
---[Integer] -> Integer --
+--Integer -> [Integer]--
+toDigits x | x<=0 = []
+toDigits x | x>0 = toDigits (div x 10) ++ [mod x 10]
 
+--[Integer] -> Integer --
 sumDigits [] = 0
-sumDigits [x] = x
-sumDigits [s:ns] = sumDigits (toDigits(s)) + sumDigits ns
+sumDigits [s] = s
+sumDigits (s:ns) = sumDigits (toDigits (s) ) + sumDigits ns
