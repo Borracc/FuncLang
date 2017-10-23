@@ -15,4 +15,16 @@ move West (x,y) = (x-1,y)
 moves :: [Move] -> Pos -> Pos
 
 moves [] p = p
-moves (m:ms) p = moves ms (move m p) 
+moves (m:ms) p = moves ms (move m p)
+
+invmove :: Move -> Pos -> Pos
+
+invmove North (x,y) = move South (x,y)
+invmove South (x,y) = move North (x,y)
+invmove East (x,y) = move West (x,y)
+invmove West (x,y) = move East (x,y)
+
+invmoves :: [Move] -> Pos -> Pos
+
+invmoves [] p = p
+invmoves (m:ms) p = invmove m (invmoves ms p)
