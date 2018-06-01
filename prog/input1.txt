@@ -1,0 +1,4 @@
+f = 3;
+g x y = let z = x in z;
+h = 7;
+u = h
