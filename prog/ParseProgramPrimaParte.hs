@@ -73,7 +73,7 @@ item :: Parser Char
 item = P (\inp -> case inp of
     [] -> []
     (x:xs) -> [(x,xs)])
-	
+
 instance Alternative Parser where
     -- empty :: Parser a
     empty = P (\inp -> [])
