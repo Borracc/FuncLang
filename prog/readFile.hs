@@ -7,7 +7,7 @@ readF = do {inh <- openFile "input1.txt" ReadMode;
     prog <- readloop inh;
     hClose inh;
     return prog}
-		
+
 --main--
 main::IO(Program Name)
 main=do {inp <- readF;

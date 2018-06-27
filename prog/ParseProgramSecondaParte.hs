@@ -37,6 +37,9 @@ data Expr a = EVar Name
                 [Alter a]
             | ELam [a] (Expr a)
             deriving Show
+
+-- parole-chiave non utilizzabili come nomi di variabili o funzioni
+keywords = ["of", "let", "letrec", "in", "case","Pack"] 
 ------------------------------------------
 
 -----Definizione Functor, Applicative e Monad per Parser
@@ -122,9 +125,11 @@ string (x:xs) = do char x
 -- parse an identifier (variable name)
 -- parse ident "width = 10"  =  [("width"," = 10")]
 ident :: Parser String
-ident = do x <- lower
-           xs <- many alphanum
-           return (x:xs)
+ident = do {x <- lower;
+           xs <- many alphanum;
+		   if (elem (x:xs) keywords)
+				then empty;
+				else return (x:xs);}
 
 -- parse a natural number
 -- parse nat "18 * 23"  =  [(18," * 23")]
@@ -265,12 +270,11 @@ parseAlt = do symbol "<"
 
 
 -- Parse a "Definition". It's used by parseLet and parseLetRec for Def (let and letrec).
-parseDef :: Parser (Def Name) -- "var=expr"
+parseDef :: Parser (Def Name)
 parseDef = do x <- identifier
               symbol "="
-              expr <- parseExpr
-              do many (symbol ";")
-                 return (x,expr)
+              expr <- parseAExpr
+              return (x, expr)
 
 ----------------SECONDA PARTE-----------------------------
 
@@ -324,5 +328,8 @@ parseExpr5 = do left <- parseExpr6
                  <|> return left
 
 parseExpr6 :: Parser (Expr Name)
-parseExpr6 = do elem <- parseAExpr
-                return elem
+parseExpr6 = do el <- parseAExpr
+                do x <- parseExpr6
+                   return (EAp el x)
+                 <|> return el
+
